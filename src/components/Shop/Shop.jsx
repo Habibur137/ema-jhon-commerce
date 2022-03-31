@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Product from "../../Product/Product";
-import Cart from "../../Cart/Cart";
+import Product from "../Product/Product";
+import Cart from "../Cart/Cart";
+import { addToDb, getStoredCart } from "../../utilities/fakedb";
 
 const Shop = () => {
   const [products, setproducts] = useState([]);
@@ -11,9 +12,33 @@ const Shop = () => {
       .then((data) => setproducts(data));
   }, []);
 
-  const handleAddToCart = (product) => {
-    let newCart = [...cart, product];
+  useEffect(() => {
+    let newCart = [];
+    const cart = getStoredCart();
+    for (const key in cart) {
+      const findInLocalStorage = products.find((product) => product.id == key);
+      if (findInLocalStorage) {
+        const quantity = cart[key];
+        findInLocalStorage.quantity = quantity;
+        newCart.push(findInLocalStorage);
+      }
+    }
     setCart(newCart);
+  }, [products]);
+
+  const handleAddToCart = (product) => {
+    const exist = cart.find((pr) => pr.id == product.id);
+    let newCart;
+    if (!exist) {
+      product.quantity = 1;
+      newCart = [...cart, product];
+    } else {
+      const rest = cart.filter((pr) => pr.id != product.id);
+      product.quantity += 1;
+      newCart = [...rest, product];
+    }
+    setCart(newCart);
+    addToDb(product.id);
   };
   return (
     <div className="md:flex md:flex-row gap-4 md:px-24 pt-8 relative z-0">
@@ -31,7 +56,7 @@ const Shop = () => {
         </div>
       </div>
       {/* cart div  */}
-      <div className="basis-3/12 sticky top-0 bg-amber-300 p-2">
+      <div className="basis-3/12 md:sticky top-0 bg-amber-300 p-2">
         <Cart cart={cart} />
       </div>
     </div>
