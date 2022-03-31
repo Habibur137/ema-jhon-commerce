@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import logo from "../../images/Logo.svg";
 
 const Header = () => {
@@ -8,18 +9,15 @@ const Header = () => {
         <img className="mx-auto" src={logo} alt="" />
       </div>
       <div className="text-white font-semibold text-xl">
-        <a className="mr-3 hover:text-slate-300" href="/home">
+        <Link className="mr-3 hover:text-slate-300" to="/">
+          Home
+        </Link>
+        <Link className="mr-3 hover:text-slate-300" to="/shop">
           Shop
-        </a>
-        <a className="mr-3 hover:text-slate-300" href="#">
+        </Link>
+        <Link className="mr-3 hover:text-slate-300" to="/orders">
           Orders
-        </a>
-        <a className="mr-3 hover:text-slate-300" href="#">
-          Inventory
-        </a>
-        <a className=" hover:text-slate-300" href="#">
-          About
-        </a>
+        </Link>
       </div>
     </nav>
   );
