@@ -2,29 +2,26 @@ import React, { useEffect, useState } from "react";
 import Product from "../Product/Product";
 import Cart from "../Cart/Cart";
 import { addToDb, getStoredCart } from "../../utilities/fakedb";
+import useProduct from "../../hooks/useProduct";
+import useCart from "../../hooks/useCart";
 
 const Shop = () => {
-  const [products, setproducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  useEffect(() => {
-    fetch("products.json")
-      .then((res) => res.json())
-      .then((data) => setproducts(data));
-  }, []);
+  const [products, setproducts] = useProduct();
+  const [cart, setCart] = useCart(products);
 
-  useEffect(() => {
-    let newCart = [];
-    const cart = getStoredCart();
-    for (const key in cart) {
-      const findInLocalStorage = products.find((product) => product.id == key);
-      if (findInLocalStorage) {
-        const quantity = cart[key];
-        findInLocalStorage.quantity = quantity;
-        newCart.push(findInLocalStorage);
-      }
-    }
-    setCart(newCart);
-  }, [products]);
+  // useEffect(() => {
+  //   let newCart = [];
+  //   const cart = getStoredCart();
+  //   for (const key in cart) {
+  //     const findInLocalStorage = products.find((product) => product.id == key);
+  //     if (findInLocalStorage) {
+  //       const quantity = cart[key];
+  //       findInLocalStorage.quantity = quantity;
+  //       newCart.push(findInLocalStorage);
+  //     }
+  //   }
+  //   setCart(newCart);
+  // }, [products]);
 
   const handleAddToCart = (product) => {
     const exist = cart.find((pr) => pr.id == product.id);
