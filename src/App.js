@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Orders from "./components/Orders/Orders";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+import RequireAuth from "./components/RequireAuth/RequireAuth";
 
 function App() {
   return (
@@ -13,7 +14,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Shop />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route
+          path="/orders"
+          element={
+            <RequireAuth>
+              <Orders />
+            </RequireAuth>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>

@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Cart = ({ cart }) => {
+  const navigate = useNavigate();
   let total = 0;
   let shipping = 0;
   let quantity = 0;
@@ -30,6 +32,9 @@ const Cart = ({ cart }) => {
       <h3>
         Pay To:<span className="text-emerald-600"> ${GrandTotal}</span>
       </h3>
+      <div>
+        <button onClick={() => navigate("/orders")}>Proceed chekout</button>
+      </div>
     </div>
   );
 };
