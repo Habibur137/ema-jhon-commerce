@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [createUserWithEmailAndPassword, user] =
+    useCreateUserWithEmailAndPassword(auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -9,6 +14,9 @@ const Register = () => {
   const emailBlur = (event) => {
     setEmail(event.target.value);
   };
+  if (user) {
+    navigate("/shop");
+  }
   const passwordBlur = (event) => {
     setPassword(event.target.value);
   };
@@ -16,11 +24,17 @@ const Register = () => {
     setConfirmPassword(event.target.value);
   };
   const createUser = (event) => {
+    console.log(email, password);
     event.preventDefault();
     if (password !== confirmPassword) {
       setError("password did not match");
       return;
     }
+    if (password < 6) {
+      setError("Password must be 6 chareacters long");
+      return;
+    }
+    createUserWithEmailAndPassword(email, password);
   };
   return (
     <div className="flex justify-center w-96 mx-auto mt-8 bg-[#f7f7f7] shadow-2xl p-4">
@@ -48,7 +62,7 @@ const Register = () => {
               onBlur={passwordBlur}
               className="border px-2 py-1 outline-0"
               type="password"
-              name="email"
+              name="password"
               id=""
               required
             />
@@ -66,9 +80,9 @@ const Register = () => {
               required
             />
           </div>
-          <p>{error}</p>
+          <p className="text-red-500">{error}</p>
           <input
-            className="w-full bg-yellow-600 mt-6 px-2 py-1 text-2xl"
+            className="w-full bg-yellow-600 mt-6 px-2 py-1 text-2xl hover:bg-indigo-400"
             type="submit"
             value="Register"
           />

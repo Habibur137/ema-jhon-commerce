@@ -1,17 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Link, useNavigate } from "react-router-dom";
+import auth from "../../firebase.init";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+  if (user) {
+    navigate("/shop");
+  }
+  const emailBlur = (event) => {
+    setEmail(event.target.value);
+  };
+  const passwordBlur = (event) => {
+    setPassword(event.target.value);
+  };
+  const signInUser = (event) => {
+    event.preventDefault();
+    signInWithEmailAndPassword(email, password);
+  };
   return (
     <div className="flex justify-center w-96 mx-auto mt-8 bg-[#f7f7f7] shadow-2xl p-4">
       <div>
         <h1 className="text-2xl mb-4 text-center">Login</h1>
-        <form>
+        <form onSubmit={signInUser}>
           <div className="flex flex-col w-full">
             <label className="text-xl" htmlFor="email">
               Email
             </label>
             <input
+              onBlur={emailBlur}
               className="border px-2 py-1 outline-0"
               type="email"
               name="email"
@@ -24,6 +45,7 @@ const Login = () => {
               Password
             </label>
             <input
+              onBlur={passwordBlur}
               className="border px-2 py-1 outline-0"
               type="password"
               name="email"
@@ -31,6 +53,10 @@ const Login = () => {
               required
             />
           </div>
+          <p>
+            {error?.message}
+            {loading && <p>Loading.....</p>}
+          </p>
           <input
             className="w-full bg-yellow-600 mt-6 px-2 py-1 text-2xl"
             type="submit"
